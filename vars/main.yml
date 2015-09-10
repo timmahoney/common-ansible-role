@@ -1,2 +1,8 @@
 ---
 # vars file for common
+
+machine_standard_packages:
+- vim-enhanced
+- tmux
+- emacs
+- htop

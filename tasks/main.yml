@@ -1,2 +1,41 @@
 ---
 # tasks file for common
+
+- name: Update all softwares
+  sudo: yes
+  yum:
+    name: "*"
+    state: "latest"
+
+- name: Install Extra Packages for Enterprise Linux Repo
+  sudo: yes
+  yum:
+    name: "epel-release"
+    state: "latest"
+
+- name: Set Locale
+  sudo: yes
+  template:
+    src: locale.conf.j2
+    dest: /etc/locale.conf
+
+- name: Localtime Link
+  sudo: yes
+  file:
+    src: /usr/share/zoneinfo/{{ machine_timezone }}
+    dest: /etc/localtime
+    state: link
+
+- name: Install Vim, Emacs, Tmux, HTop
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: machine_standard_packages
+
+- name: Install Machine Packages
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: machine_packages

@@ -1,2 +1,6 @@
 ---
 # defaults file for common
+
+machine_locale: es_US.utf8
+machine_timezone: UTC
+machine_packages: []
