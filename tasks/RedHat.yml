@@ -1,0 +1,30 @@
+---
+
+- name: Update all softwares
+  sudo: yes
+  yum:
+    name: "*"
+    state: "latest"
+
+- name: Install Extra Packages for Enterprise Linux Repo
+  sudo: yes
+  yum:
+    name: "epel-release"
+    state: "latest"
+
+- name: Install Vim, Emacs, Tmux, HTop, Unzip
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ machine_standard_packages }}"
+
+- name: Install Machine Packages
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ machine_packages }}"
+
+- name: Disable SELinux
+  selinux: state=disabled

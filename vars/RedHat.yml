@@ -1,0 +1,10 @@
+---
+# vars file for common
+
+__machine_standard_packages:
+- vim-enhanced
+- tmux
+- emacs
+- htop
+- unzip
+- git

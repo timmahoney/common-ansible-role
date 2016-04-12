@@ -1,17 +1,16 @@
 ---
 # tasks file for common
 
-- name: Update all softwares
-  sudo: yes
-  yum:
-    name: "*"
-    state: "latest"
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Install Extra Packages for Enterprise Linux Repo
-  sudo: yes
-  yum:
-    name: "epel-release"
-    state: "latest"
+- name: Define machine_standard_packages.
+  set_fact:
+    machine_standard_packages: "{{ __machine_standard_packages | list }}"
+  when: machine_standard_packages is not defined
+
+- name: Include OS-specific tasks.
+  include: "{{ ansible_os_family }}.yml"
 
 - name: Set Locale
   sudo: yes
@@ -19,23 +18,22 @@
     src: locale.conf.j2
     dest: /etc/locale.conf
 
+- name: Get Localtime information
+  sudo: yes
+  stat: 
+    path: /etc/localtime
+  register: localtime
+
+- name: Remove the localtime file
+  sudo: yes
+  file:
+    path: /etc/localtime
+    state: absent
+  when: not localtime.stat.islnk
+
 - name: Localtime Link
   sudo: yes
   file:
     src: /usr/share/zoneinfo/{{ machine_timezone }}
     dest: /etc/localtime
     state: link
-
-- name: Install Vim, Emacs, Tmux, HTop
-  sudo: yes
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items: machine_standard_packages
-
-- name: Install Machine Packages
-  sudo: yes
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items: machine_packages
