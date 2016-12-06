@@ -28,7 +28,7 @@ Example Playbook
 License
 -------
 
-GPLv2
+MIT
 
 Author Information
 ------------------
